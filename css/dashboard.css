@@ -1,0 +1,111 @@
+/* style.css */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+th {
+    background-color: #f9f9f9;
+}
+body{
+    width: max-content;
+}
+#urlTable{
+    width: 98vw;
+}
+#urlTable{
+    table-layout: fixed;
+}
+#urlTable th:nth-of-type(1){
+    width: 7vw;
+}
+#urlTable th:nth-of-type(2){
+    width: 80vw;
+}
+#urlTable th:nth-of-type(3){
+    width: 5vw;
+}
+form{
+    width: 98vw;
+    display: flex;
+    justify-content: space-evenly;
+    padding: .8em;
+}
+#summary{
+    font-size: 1rem;
+    border: 1px solid black;
+    padding: 1em;
+    width: 94vw
+}
+ol{
+    padding: 1em;
+    display: flex;
+    justify-content: space-around;
+    width: 98vw;
+}
+a{
+    color:black;
+    text-decoration: none;
+}
+nav *{
+    list-style: none;
+    font-size: 20px;
+    color: white !important;
+}
+li>a{
+    position: relative;
+}
+li>a::after{
+    content: ""; 
+    position: absolute; 
+    left: 0; 
+    bottom: 0; 
+    width: 100%; 
+    height: 2px; 
+    background-color: white; 
+    transform: scaleX(0); 
+    transform-origin: left; 
+    transition: transform 0.3s ease
+}
+a:visited{
+    color:inherit;
+}
+li>a:hover::after {
+    transform: scaleX(1); /* Show the underline on hover */
+  }
+header{
+    width: 100%;
+    background-color: black;
+}
+input,button{
+    background: white;
+    outline: 0;
+    border: 2px solid gold;
+    border-radius: 20px;
+    padding: 1em;
+    cursor: pointer;
+    transition: all ease-in-out .2s;
+}
+#filterForm label{
+    align-self: center;
+}
+input:hover,button:hover{
+    transform: scale(1.2);
+}
+input:hover{
+    cursor:text
+}
+table td, table a{
+    color:palevioletred;
+    font-size: 15px;
+}
+table a:visited{
+    color:palevioletred
+}
+.bl{
+    color:black
+}

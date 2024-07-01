@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "Data donation",
+  "version": "1.0.0",
+  "description":"Extension for donating data in search engines",
+  "content_scripts": [
+    {
+      "matches": ["https://www.google.com/*"],
+      "js": ["js/content.js"],
+      "stat_at": "document_idle"
+    }
+  ],
+  "host_permissions": ["*://*/*"],
+  "permissions": [
+    "storage",
+    "tabs",
+    "activeTab",
+    "alarms",
+    "background"
+  ],
+  "action": {
+    "default_popup": "html/popup.html"
+  },
+  "commands": {
+    "open Dashboard": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Q",
+        "mac": "Command+Shift+Q"
+      },
+      "description": "Open Dashboard."
+    }
+  },
+  "background": {
+    "service_worker": "js/background.js"
+  }
+}

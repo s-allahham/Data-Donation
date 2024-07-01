@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <script src="../js/dashboard.js" defer></script>
+  <title>Dashboard</title>
+</head>
+
+<body>
+  <header>
+    <nav>
+      <ol>
+        <li><a href="#filter-table">Filter Table</a></li>
+        <li><a href="#urlTable">Url Table</a></li>
+        <li><a href="#summary">Summary</a></li>
+      </ol>
+    </nav>
+  </header>
+  <h1 style="text-align: center;">Dashboard</h1>
+  </table>
+  <!-- form -->
+  <form id="filterForm">
+    <label for="location">Choose a location:</label>
+    <select name="location" id="location">
+      <option value="">location</option>
+    </select>
+    <label for="language">Choose a language:</label>
+    <select name="language" id="language">
+      <option value="">Language</option>
+    </select>
+    <label for="plugin_id">Choose a User_id:</label>
+    <select name="plugin_id" id="plugin_id">
+      <option value="">User Id</option>
+    </select>
+    <label for="date">Choose a date:</label>
+    <select name="date" id="date">
+      <option value="">Date</option>
+
+    </select>
+    <button type="submit">Filter</button>
+  </form>
+  <!--Table-->
+  <h2>Data Table</h2>
+  <table id="filter-table">
+    <thead>
+      <th>User ID</th>
+      <th>Location</th>
+      <th>Date</th>
+      <th>Language</th>
+      </tr>
+    </thead>
+    <tbody>
+      <caption id="filter-caption"></caption>
+    </tbody>
+  </table>
+  <h2>Find Summar about URLs of a specific query</h2>
+  <form id="urlForm">
+    <input type="text" name="q" placeholder="Query Search Terms">
+    <button type="submit">Find</button>
+  </form>
+  <h2>Summary about URLs</h2>
+  <table id="urlTable">
+    <thead>
+      <tr>
+        <th>Source</th>
+        <th>URL</th>
+        <th>Count</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+  <form id="summaryForm">
+    <input type="text" name="q" placeholder="Type a Url">
+    <button type="submit">Find</button>
+  </form>
+  <h2> Summary:</h2>
+  <p id="summary"></p>
+</body>
+
+</html>
