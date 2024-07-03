@@ -2,7 +2,7 @@
 const searchTermsforAlarm=['Probleme der Einwanderer','illegale Einwanderung','Soziale Integration von Einwanderern','Einwanderung und Kriminalitätsrate','Politische Reaktionen auf den Klimawandel',
   'Auswirkungen des Klimawandels','Klimawandel und Entwaldung','Auswirkungen des Klimawandels auf die biologische Vielfalt','AFD','CDU','Die Linke','Die Grünen']
   //Array for setting up alarms
-  const alarmArray=[10,5,16,0,20,0]
+  const alarmArray=[12,0,16,0,20,0]
   //function to get formatted date in format month-day, hours:minutes
   const getFormattedDate=()=>{
     const currentDate = new Date();
