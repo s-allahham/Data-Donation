@@ -2,7 +2,7 @@
 const searchTermsforAlarm=['Probleme der Einwanderer','illegale Einwanderung','Soziale Integration von Einwanderern','Einwanderung und Kriminalitätsrate','Politische Reaktionen auf den Klimawandel',
   'Auswirkungen des Klimawandels','Klimawandel und Entwaldung','Auswirkungen des Klimawandels auf die biologische Vielfalt','AFD','CDU','Die Linke','Die Grünen']
   //Array for setting up alarms
-  const alarmArray=[12,0,16,0,20,0]
+  const alarmArray=[10,5,16,0,20,0]
   //function to get formatted date in format month-day, hours:minutes
   const getFormattedDate=()=>{
     const currentDate = new Date();
@@ -27,13 +27,13 @@ const searchTermsforAlarm=['Probleme der Einwanderer','illegale Einwanderung','S
   
   //function to set id
   const setId = () => {
-    chrome.storage.local.get(["plugin_id"], async (id) => {
+    chrome.storage.local.get(["user_id"], async (id) => {
       try{
-        const pluginId = id.plugin_id
+        const pluginId = id.user_id
         if (!pluginId) {
           const response=await fetch('https://data-getter.onrender.com/user/set')
           const {plugin_id}=await response.json()
-          chrome.storage.local.set({ plugin_id})
+          chrome.storage.local.set({ user_id:plugin_id})
         }
       }catch(err){
         console.log(err)
@@ -88,14 +88,14 @@ const searchTermsforAlarm=['Probleme der Einwanderer','illegale Einwanderung','S
     const minutes = now.getMinutes()
     // Check if the current time is within a certain threshold of the alarm time
     if (
-      (alarm.name === "alarmOne" && hours === alarmArray[0] && minutes === alarmArray[1]) ||
-      (alarm.name === "alarmTwo" && hours === alarmArray[2] && minutes === alarmArray[3]) ||
-      (alarm.name === "alarmThree" && hours === alarmArray[4] && minutes === alarmArray[5])
+      (alarm.name === "alarmOne" && hours === alarmArray[0] && minutes <= alarmArray[1]) ||
+      (alarm.name === "alarmTwo" && hours === alarmArray[2] && minutes <= alarmArray[3]) ||
+      (alarm.name === "alarmThree" && hours === alarmArray[4] && minutes <= alarmArray[5])
     ) {
       // Perform your action here
       searchTermsforAlarm.map(item=>{
-        chrome.tabs.create({url:`https://www.google.com/search?q=${item}`})
-        chrome.tabs.create({url:`https://www.google.com/search?q=${item}&tbm=nws`})
+        chrome.tabs.create({url:`https://www.google.com/search?q=${item}&myQuery=true`})
+        chrome.tabs.create({url:`https://www.google.com/search?q=${item}&tbm=nws&myQuery=true`})
       })
     }
   })
@@ -108,6 +108,26 @@ const searchTermsforAlarm=['Probleme der Einwanderer','illegale Einwanderung','S
   //initializing the main data object
   let data = { query:[{querySearch:'',google_query:[],google_news_query:[]}] }
   let toggleCompleteState=false
+  const setData=async ()=>{
+    try{
+      //user_id
+      await chrome.storage.local.get(["user_id"],async (id) => {
+        const plugin_id=id.plugin_id
+        data = { ...data, plugin_id }
+      })
+      //location
+      const location = await getLocation()
+      data = { ...data, location }
+      //get time
+      let date = getFormattedDate()
+      data = { ...data, date }
+      //getting language
+      const language = await navigator.language
+      data = { ...data, language }
+    }catch(err){
+      console.log(err)
+    }
+  }
   //<------------Receiving messages from content------------>
   chrome.runtime.onMessage.addListener(async (message, sender, response) => {
     try {
@@ -125,6 +145,7 @@ const searchTermsforAlarm=['Probleme der Einwanderer','illegale Einwanderung','S
           data.query[existingQueryIndex].google_query=google_query
         }
       }else if(!(data.query[0].querySearch)){
+        toggleCompleteState=false
         data.query[0].google_news_query=google_news_query
         data.query[0].google_query=google_query
         data.query[0].querySearch=querySearch
@@ -134,28 +155,14 @@ const searchTermsforAlarm=['Probleme der Einwanderer','illegale Einwanderung','S
       }
       // checking if the data is stored
       if (data.query.length===searchTermsforAlarm.length && toggleCompleteState) {
-        //plugin_id
-        await chrome.storage.local.get(["plugin_id"], (id) => {
-          data = { ...data, plugin_id: id.plugin_id }
-        })
-        //location
-        const location = await getLocation()
-        data = { ...data, location }
-        //get time
-        let date = getFormattedDate()
-        data = { ...data, date }
-        //getting language
-        const language = await navigator.language
-        data = { ...data, language }
-        const response = await fetch("https://data-getter.onrender.com/data", {
+       await setData()
+         await fetch("https://data-getter.onrender.com/data", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(data),
         })
-        const dataResponse = await response
-        console.log(data)
         data = { query:[{querySearch:'',google_query:[],google_news_query:[]}] }
       }
     } catch (err) {
