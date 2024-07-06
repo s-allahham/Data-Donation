@@ -2,7 +2,38 @@
 const searchTermsforAlarm=['Probleme der Einwanderer','illegale Einwanderung','Soziale Integration von Einwanderern','Einwanderung und Kriminalitätsrate','Politische Reaktionen auf den Klimawandel',
   'Auswirkungen des Klimawandels','Klimawandel und Entwaldung','Auswirkungen des Klimawandels auf die biologische Vielfalt','AFD','CDU','Die Linke','Die Grünen']
   //Array for setting up alarms
-  const alarmArray=[12,4,16,0,20,0]
+  let alarmArray=[]
+  getRandomAlarm=()=>{
+
+    function getRandomHour() {
+      return Math.floor(Math.random() * 24); // Generates a random hour (0-23)
+}
+
+function getRandomMinute() {
+  return Math.floor(Math.random() * 60); // Generates a random minute (0-59)
+}
+
+alarmArray = [
+    getRandomHour(), // First value (hour)
+    getRandomMinute(), // Second value (minute)
+    getRandomHour(), // Third value (hour)
+    getRandomMinute(), // Fourth value (minute)
+    getRandomHour(), // Fifth value (hour)
+    getRandomMinute() // Sixth value (minute)
+  ];
+
+// Ensure the first, third, and fifth values (hours) don't exceed 23
+alarmArray[0] %= 24;
+alarmArray[2] %= 24;
+alarmArray[4] %= 24;
+
+// Ensure the second, fourth, and sixth values (minutes) don't exceed 59
+alarmArray[1] %= 60;
+alarmArray[3] %= 60;
+alarmArray[5] %= 60;
+console.log(alarmArray)
+}
+
   //function to get formatted date in format month-day, hours:minutes
   const getFormattedDate=()=>{
     const currentDate = new Date();
@@ -17,12 +48,14 @@ const searchTermsforAlarm=['Probleme der Einwanderer','illegale Einwanderung','S
   chrome.runtime.onStartup.addListener(() => {
     setId()
     setupDailyAlarms()
+    getRandomAlarm()
   })
   
   // This event is fired when the extension is installed or updated
   chrome.runtime.onInstalled.addListener(() => {
     setId()
     setupDailyAlarms()
+    getRandomAlarm()
   })
   
   //function to set id
@@ -83,21 +116,12 @@ const searchTermsforAlarm=['Probleme der Einwanderer','illegale Einwanderung','S
   }
   // Listen for the alarms
   chrome.alarms.onAlarm.addListener((alarm) => {
-    const now = new Date()
-    const hours = now.getHours()
-    const minutes = now.getMinutes()
-    // Check if the current time is within a certain threshold of the alarm time
-    if (
-      (alarm.name === "alarmOne" && hours === alarmArray[0] && minutes <= alarmArray[1]) ||
-      (alarm.name === "alarmTwo" && hours === alarmArray[2] && minutes <= alarmArray[3]) ||
-      (alarm.name === "alarmThree" && hours === alarmArray[4] && minutes <= alarmArray[5])
-    ) {
       // Perform your action here
       searchTermsforAlarm.map(item=>{
         chrome.tabs.create({url:`https://www.google.com/search?q=${item}&myQuery=true`})
         chrome.tabs.create({url:`https://www.google.com/search?q=${item}&tbm=nws&myQuery=true`})
       })
-    }
+    
   })
   //function to get location
   const getLocation = async () => {
